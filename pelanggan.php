@@ -1,6 +1,10 @@
 <?php
 
 require 'ceklogin.php';
+//hitung jumlah pelanggan
+$h1 = mysqli_query($c,"select * from pelanggan");
+$h2 = mysqli_num_rows($h1); //jumlah pelanggan
+
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +15,7 @@ require 'ceklogin.php';
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Stock Barang</title>
+        <title>Data Pelanggan</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -59,14 +63,21 @@ require 'ceklogin.php';
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Data Barang Masuk</h1>
+                        <h1 class="mt-4">Data Pelanggan</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Selamat Datang</li>
                         </ol>
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <div class="card-body">Jumlah Pelanggan: <?=$h2;?></div>
+                                </div>
+                            </div>
+                        </div>
 
                        <!-- Button to Open the Modal -->
                        <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#myModal">
-                        Tambah Barang Masuk
+                        Tambah Pelanggan
                        </button>
 
 
@@ -74,7 +85,7 @@ require 'ceklogin.php';
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Data Barang
+                                Data Pelanggan
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -82,38 +93,36 @@ require 'ceklogin.php';
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Produk</th>
-                                            <th>Jumlah</th>
-                                            <th>Tanggal</th>
+                                            <th>Nama Pelanggan</th>
+                                            <th>No Telepon</th>
+                                            <th>Alamat</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
                                     <?php  
-                                    $get = mysqli_query($c,"select * from masuk m, produk p where m.idproduk=p.idproduk");
-                                    $i = 1;
+                                    $get = mysqli_query($c,"select * from pelanggan");
+                                    $i = 1; //Penomoran
 
                                     while($p=mysqli_fetch_array($get)){
-                                    $namaproduk = $p['namaproduk'];
-                                    $deskripsi = $p['deskripsi'];
-                                    $qty = $p['qty'];
-                                    $idmasuk = $p['idmasuk'];
-                                    $idproduk = $p['idproduk'];
-                                    $tanggal = $p['tanggalmasuk'];
+                                    $namapelanggan = $p['namapelanggan'];
+                                    $notelp = $p['notelp'];
+                                    $alamat = $p['alamat'];
+                                    $idpl = $p['idpelanggan'];
 
                                     ?>
 
                                         <tr>
                                             <td><?=$i++;?></td>
-                                            <td><?=$namaproduk;?>: <?=$deskripsi;?></td>
-                                            <td><?=$qty;?></td>
-                                            <td><?=$tanggal;?></td>
+                                            <td><?=$namapelanggan;?></td>
+                                            <td><?=$notelp;?></td>
+                                            <td><?=$alamat;?></td>
                                             <td>
-                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?=$idmasuk;?>">
+                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?=$idpl;?>">
                                                      Edit
                                                 </button> 
-                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete<?=$idmasuk;?>">
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete<?=$idpl;?>">
                                                      Delete
                                                 </button>
                                                 
@@ -123,13 +132,13 @@ require 'ceklogin.php';
 
 
                                         <!-- Modal edit -->
-                                        <div class="modal fade" id="edit<?=$idmasuk;?>">
+                                        <div class="modal fade" id="edit<?=$idpl;?>">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
 
                                             <!-- Modal Header -->
                                             <div class="modal-header">
-                                                <h4 class="modal-title">Ubah Data Barang Masuk</h4>
+                                                <h4 class="modal-title">Ubah <?=$namapelanggan;?></h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
 
@@ -137,15 +146,15 @@ require 'ceklogin.php';
 
                                             <!-- Modal body -->
                                             <div class="modal-body">
-                                                <input type="text" name="namaproduk" class="form-control" placeholder="Nama produk" value="<?=$namaproduk;?>: <?=$deskripsi;?>" disabled>
-                                                <input type="number" name="qty" class="form-control mt-2" placeholder="Harga Produk" value="<?=$qty;?>">
-                                                <input type="hidden" name="idm" value="<?=$idmasuk;?>">
-                                                <input type="hidden" name="idp" value="<?=$idproduk;?>">
+                                                <input type="text" name="namapelanggan" class="form-control" placeholder="Nama pelanggan" value="<?=$namapelanggan?>">
+                                                <input type="text" name="notelp" class="form-control mt-2" placeholder="No telp" value="<?=$notelp;?>">
+                                                <input type="text" name="alamat" class="form-control mt-2" placeholder="Alamat" value="<?=$alamat;?>">
+                                                <input type="hidden" name="idpl" value="<?=$idpl;?>">
                                             </div>
 
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-success" name="editdatabarangmasuk">Submit</button>
+                                                <button type="submit" class="btn btn-success" name="editpelanggan">Submit</button>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                             </div>
 
@@ -157,13 +166,13 @@ require 'ceklogin.php';
 
 
                                         <!-- Modal delete -->
-                                        <div class="modal fade" id="delete<?=$idmasuk;?>">
+                                        <div class="modal fade" id="delete<?=$idpl;?>">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
 
                                             <!-- Modal Header -->
                                             <div class="modal-header">
-                                                <h4 class="modal-title">Hapus data barang masuk</h4>
+                                                <h4 class="modal-title">Hapus <?=$namapelanggan;?></h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
 
@@ -171,14 +180,13 @@ require 'ceklogin.php';
 
                                             <!-- Modal body -->
                                             <div class="modal-body">
-                                                Apakah anda yakin ingin menghapus data ini
-                                                <input type="hidden" name="idp" value="<?=$idproduk;?>">
-                                                <input type="hidden" name="idm" value="<?=$idmasuk;?>">
+                                                Apakah anda yakin ingin menghapus pelanggan ini
+                                                <input type="hidden" name="idpl" value="<?=$idpl;?>">
                                             </div>
 
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
-                                                <button type="submit" class="btn btn-success" name="hapusdatabarangmasuk">Submit</button>
+                                                <button type="submit" class="btn btn-success" name="hapuspelanggan">Submit</button>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                             </div>
 
@@ -220,14 +228,14 @@ require 'ceklogin.php';
 
 
 
-   <!-- The Modal -->
+  <!-- The Modal -->
 <div class="modal fade" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Tambah Barang</h4>
+        <h4 class="modal-title">Tambah Data Pelanggan</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
@@ -235,35 +243,14 @@ require 'ceklogin.php';
 
       <!-- Modal body -->
       <div class="modal-body">
-        Pilih Barang
-        <select name="idproduk" class="form-control">
-
-         <?php
-         $getproduk = mysqli_query($c, "select * from produk ");
-
-         while($pl=mysqli_fetch_array($getproduk)){
-            $namaproduk = $pl['namaproduk'];
-            $stock = $pl['stock'];
-            $deskripsi = $pl['deskripsi'];
-            $idproduk = $pl['idproduk'];
-
-         
-         ?>
-
-         <option value="<?=$idproduk;?>"><?=$namaproduk;?> - <?=$deskripsi;?> (Stock: <?=$stock;?>)</option>
-
-         <?php
-         }
-         ?>
-
-        </select>
-        
-        <input type="number" name="qty" class="form-control mt-4" placeholder="Jumlah"min="1" required>
-    </div>
+        <input type="text" name="namapelanggan" class="form-control" placeholder="Nama pelanggan">
+        <input type="text" name="notelp" class="form-control mt-2" placeholder="No telepon">
+        <input type="num" name="alamat" class="form-control mt-2" placeholder="Alamat">
+      </div>
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" name="barangmasuk">Submit</button>
+        <button type="submit" class="btn btn-success" name="tambahpelanggan">Submit</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
       </div>
 
